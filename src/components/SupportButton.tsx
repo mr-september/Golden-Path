@@ -16,13 +16,17 @@ export function SupportButton() {
         <ChevronDown className="w-3.5 h-3.5 text-amber-500/50 group-hover:rotate-180 transition-transform duration-500" />
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - Seamless Hover Bridge Approach */}
       <div className={cn(
-        "absolute top-full left-0 mt-3 w-64 p-2 rounded-2xl border border-zinc-800 bg-[#09090b]/95 backdrop-blur-2xl shadow-2xl",
-        "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto",
-        "transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] z-50 overflow-hidden"
+        "absolute top-full right-0 pt-2 w-64 group-hover:block transition-all",
+        "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto",
+        "z-50"
       )}>
-        <div className="px-3 py-2 border-b border-zinc-800/50 mb-1">
+        {/* Invisible Bridge to maintain hover state while crossing gap */}
+        <div className="absolute -top-4 left-0 right-0 h-4" />
+        
+        <div className="p-2 rounded-2xl border border-zinc-800 bg-[#09090b]/98 backdrop-blur-2xl shadow-2xl overflow-hidden relative">
+          <div className="px-3 py-2 border-b border-zinc-800/50 mb-1">
           <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500">
             Support FOSS Development
           </p>
@@ -94,6 +98,7 @@ export function SupportButton() {
           <p className="text-[10px] leading-relaxed text-zinc-500 font-medium italic">
             "Your support is vital to the ongoing development of high-precision FOSS solutions."
           </p>
+        </div>
         </div>
       </div>
     </div>

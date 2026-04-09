@@ -25,10 +25,7 @@ export function Header({
       {/* API Health Badge */}
       {/* API Health Badge - HUD Layer */}
       <div className="fixed top-8 left-1/2 -translate-x-1/2 w-full max-w-7xl px-8 z-50 pointer-events-none">
-        <div className="flex items-center justify-between pointer-events-auto w-full">
-          <SupportButton />
-
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-end pointer-events-auto w-full gap-4">
           {fileName && (
             <div className="flex items-center gap-3 px-4 py-2 rounded-full border border-zinc-700 bg-zinc-900/40 text-[11px] font-bold tracking-[0.15em] uppercase text-zinc-400 backdrop-blur-sm shadow-xl transition-all animate-in fade-in slide-in-from-right-4 duration-1000">
               <History className="w-4 h-4 text-amber-500" />
@@ -73,7 +70,7 @@ export function Header({
               </span>
             )}
           </button>
-          </div>
+          <SupportButton />
         </div>
       </div>
 
