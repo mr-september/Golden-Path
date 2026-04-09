@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
+  --color-gold-950: #451a03;
+}
+
+@layer base {
+  :root {
+    --gold-primary: #f59e0b;
+    --gold-glow: rgba(245, 158, 11, 0.4);
+    --bg-dark: #050505;
+  }
+
+  body {
+    @apply bg-[#050505] text-zinc-100 antialiased;
+    background-image: 
+      radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%),
+      radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.03), transparent 40%);
+    background-attachment: fixed;
+  }
+
+  /* Global Scrollbar Styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 158, 11, 0.3) transparent;
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.2);
+    border-radius: 10px;
+    transition: background 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 158, 11, 0.4);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-zinc-900/60 border border-zinc-700/50 backdrop-blur-md rounded-2xl shadow-2xl;
+    @apply hover:border-zinc-600/50 transition-all duration-300;
+  }
+
+  .golden-glow {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+  }
+
+  .path-line {
+    position: relative;
+  }
+
+  .path-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--gold-primary), transparent);
+    @apply opacity-20;
+  }
+}
+
+
+@keyframes path-crawl {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-path {
+  stroke-dasharray: 1000;
+  animation: path-crawl 30s linear infinite;
+}
+
+/* Standardized golden pulsing effect for active path elements */
+@keyframes golden-path-pulse {
+  0%   { box-shadow: 0 0 4px 1px rgba(245, 158, 11, 0.15), 0 0 0px 0px rgba(245, 158, 11, 0), inset 0 0 4px rgba(245, 158, 11, 0.1); }
+  50%  { box-shadow: 0 0 20px 4px rgba(245, 158, 11, 0.4), 0 0 40px 8px rgba(245, 158, 11, 0.15), inset 0 0 20px rgba(245, 158, 11, 0.3); }
+  100% { box-shadow: 0 0 4px 1px rgba(245, 158, 11, 0.15), 0 0 0px 0px rgba(245, 158, 11, 0), inset 0 0 4px rgba(245, 158, 11, 0.1); }
+}
+
+.animate-golden-pulse {
+  animation: golden-path-pulse 2s ease-in-out infinite;
+}
