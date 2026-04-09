@@ -23,7 +23,7 @@ export function ApiKeyInput({ apiKey, setApiKey }: ApiKeyInputProps) {
         />
         <div className="absolute inset-0 rounded-xl bg-amber-500/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500" />
       </div>
-      <p className="text-[10px] text-zinc-500 leading-relaxed italic">
+      <p className="text-[10px] text-zinc-500 leading-relaxed font-medium italic">
         Your key is encrypted locally and never leaves your browser.
       </p>
     </section>

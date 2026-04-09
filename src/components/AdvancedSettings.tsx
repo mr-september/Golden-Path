@@ -92,7 +92,7 @@ export function AdvancedSettings({
                       onChange={(e) => setBatchSize(parseInt(e.target.value))}
                       className="w-full h-1.5 bg-zinc-900 rounded-lg appearance-none cursor-pointer accent-amber-500 disabled:opacity-30 transition-all border border-zinc-700/50"
                     />
-                    <p className="text-[10px] text-zinc-600 italic">Adjusts the number of chat turns processed per AI inference call.</p>
+                    <p className="text-[10px] text-zinc-600 font-medium italic">Adjusts the number of chat turns processed per AI inference call.</p>
                   </div>
 
                   <div className="space-y-4">
@@ -110,7 +110,7 @@ export function AdvancedSettings({
                       onChange={(e) => setTokenCeiling(Math.pow(2, parseInt(e.target.value)))}
                       className="w-full h-1.5 bg-zinc-900 rounded-lg appearance-none cursor-pointer accent-amber-500 disabled:opacity-30 transition-all border border-zinc-700/50"
                     />
-                    <p className="text-[10px] text-zinc-600 italic">Upper bound for context window safety (1 token ≈ 4 chars).</p>
+                    <p className="text-[10px] text-zinc-600 font-medium italic">Upper bound for context window safety (1 token ≈ 4 chars).</p>
                   </div>
                 </div>
 
@@ -126,7 +126,7 @@ export function AdvancedSettings({
                     placeholder="e.g. (?=Human:|Assistant:)"
                     className="w-full bg-zinc-950 border border-zinc-900 rounded-xl p-4 text-[11px] font-mono text-zinc-400 focus:outline-none focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/30 transition-all placeholder:text-zinc-700"
                   />
-                  <p className="text-[10px] text-zinc-600 italic">Overrides default chunking heuristic rules. Use regex assertion formats.</p>
+                  <p className="text-[10px] text-zinc-600 font-medium italic">Overrides default chunking heuristic rules. Use regex assertion formats.</p>
                 </div>
 
                 <div className="space-y-4">

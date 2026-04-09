@@ -74,9 +74,8 @@ export function Header({
         </div>
       </div>
 
-      <header className="max-w-7xl mx-auto px-8 pt-10 pb-0 space-y-6 relative overflow-hidden text-center lg:text-left">
-
-        <div className="space-y-4">
+      <header className="max-w-7xl mx-auto px-8 pt-10 pb-2 space-y-6 relative overflow-hidden text-center lg:text-left">
+        <div className="space-y-2">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h1 className="text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1]">
               Golden<span className="text-transparent bg-clip-text bg-linear-to-r from-amber-400 via-amber-200 to-amber-500">Path.</span>

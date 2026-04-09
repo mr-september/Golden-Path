@@ -182,7 +182,7 @@ export function ProviderSettings({ config, setConfig }: ProviderSettingsProps) {
             >
               <div className="flex items-center justify-between px-1">
                 <label className="block text-[10px] text-zinc-300 uppercase tracking-widest">Base API URL</label>
-                <span className="text-[10px] text-amber-500/60 font-mono italic">Optional override</span>
+                <span className="text-[10px] text-amber-500/60 font-mono font-medium italic">Optional override</span>
               </div>
               <div className="relative">
                 <input
@@ -202,10 +202,10 @@ export function ProviderSettings({ config, setConfig }: ProviderSettingsProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="bg-amber-500/5 border border-amber-500/10 rounded-lg p-3 flex gap-3 items-start h-full min-h-[72px]"
+              className="bg-amber-500/5 border border-amber-500/10 rounded-lg p-3 flex gap-3 items-center h-full min-h-[72px]"
             >
-              <AlertCircle className="w-4 h-4 text-amber-500/60 mt-0.5 shrink-0" />
-              <p className="text-[10px] text-zinc-400 leading-relaxed italic">
+              <AlertCircle className="w-4 h-4 text-amber-500/60 shrink-0" />
+              <p className="text-[10px] text-zinc-400 leading-relaxed font-medium italic">
                 Credentials are AES-GCM encrypted and stored exclusively in your browser&apos;s local storage. They never transit our servers.
               </p>
             </motion.div>

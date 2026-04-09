@@ -40,7 +40,7 @@ export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
                   <mode.icon className={cn("transition-transform duration-500", isCustom ? "w-5 h-5" : "w-4 h-4", isActive && "scale-110")} />
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <div className={cn(!isCustom && "min-h-[34px] flex items-center")}>
+                  <div className={cn(!isCustom && "min-h-[28px] flex items-center")}>
                     <p className={cn(
                       "text-[0.8125rem] font-bold tracking-tighter transition-colors leading-[1.2] line-clamp-2 text-balance overflow-hidden",
                       isActive ? "text-amber-500" : "text-zinc-400 group-hover:text-zinc-200"
@@ -49,7 +49,7 @@ export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
                     </p>
                   </div>
                   {isCustom && (
-                    <p className="text-[clamp(0.6rem,0.65vw,0.65rem)] opacity-60 leading-tight font-light italic truncate mt-0.5">
+                    <p className="text-[clamp(0.6rem,0.65vw,0.65rem)] opacity-60 leading-tight font-medium italic truncate mt-0.5">
                       {mode.description}
                     </p>
                   )}
@@ -57,7 +57,7 @@ export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
               </div>
 
               {!isCustom && (
-                <p className="text-[clamp(0.6rem,0.65vw,0.65rem)] opacity-60 leading-tight mt-2.5 font-light italic line-clamp-2">
+                  <p className="text-[clamp(0.6rem,0.65vw,0.65rem)] opacity-60 leading-tight mt-2.5 font-medium italic line-clamp-2">
                   {mode.description}
                 </p>
               )}

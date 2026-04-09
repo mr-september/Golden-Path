@@ -12,7 +12,7 @@ export function SupportButton() {
         "hover:bg-amber-500/15 hover:border-amber-500/40 transition-all duration-300 shadow-xl"
       )}>
         <Heart className="w-4 h-4 text-amber-500 fill-amber-500/20 animate-pulse" />
-        <span>Support GoldenPath</span>
+        <span>Support development</span>
         <ChevronDown className="w-3.5 h-3.5 text-amber-500/50 group-hover:rotate-180 transition-transform duration-500" />
       </button>
 

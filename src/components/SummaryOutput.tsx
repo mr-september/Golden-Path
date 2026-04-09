@@ -81,7 +81,7 @@ export function SummaryOutput({ summary, onClear }: SummaryOutputProps) {
                 <CheckCircle2 className="w-8 h-8" />
               </div>
             </div>
-            <p className="text-center max-w-[340px] text-sm font-light tracking-wide italic">
+            <p className="text-center max-w-[340px] text-sm font-medium tracking-wide italic">
               Processed output will be generated here.
             </p>
           </div>

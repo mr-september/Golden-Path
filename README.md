@@ -19,7 +19,11 @@ GoldenPath addresses the "context window noise" problem by processing extensive,
 
 ## Technical Architecture
 
-1. **Ingestion**: Accepts unstructured `.txt`, `.log`, and `.md` formats.
+1. **Ingestion**: Accepts unstructured `.txt`, `.log`, `.md`, and source code formats. Supports individual file and full directory uploads.
+
+> [!NOTE]
+> **Repository Ingestion**: To maintain a zero-backend, "Hospital-Grade" privacy model, GoldenPath does not currently support direct URL fetching from external git providers. For repository analysis, please download the project (e.g., as a `.zip`), extract it, and drop the relevant files or the entire folder into the engine.
+
 2. **Segmentation**: Decomposes content into logical turns based on configurable token ceilings and turn-markers.
 3. **Distillation Loop**:
    - Compares the current batch against the existing summary state.
