@@ -59,10 +59,10 @@ const PROVIDERS: { type: ProviderType; name: string; icon: any; color: string; d
 ];
 
 const MODEL_PRESETS: Record<ProviderType, string[]> = {
-  gemini: ['gemini-3.0-flash', 'gemini-3.1-pro', 'gemini-3.1-flash-lite'],
-  openai: ['gpt-5.4', 'gpt-5.4-mini', 'gpt-5.4-thinking', 'gpt-5.4-pro'],
-  anthropic: ['claude-4.6-sonnet', 'claude-4.6-haiku', 'claude-4.6-opus'],
-  openrouter: ['google/gemini-3.1-flash', 'anthropic/claude-4.6-sonnet', 'openai/gpt-5.4-mini', 'deepseek/deepseek-r1'],
+  gemini: ['gemini-3-flash-preview', 'gemini-3.1-pro-preview', 'gemini-3.1-flash-lite-preview'],
+  openai: ['gpt-5.4-mini', 'gpt-5.4-pro', 'gpt-5.4-thinking'],
+  anthropic: ['claude-haiku-4-6', 'claude-sonnet-4-6', 'claude-opus-4-6'],
+  openrouter: ['google/gemini-3.1-pro-preview', 'anthropic/claude-haiku-4-6', 'openai/gpt-5.4-mini', 'deepseek/deepseek-r1'],
   custom: ['qwen-3.5-coder', 'gemma-4-31b', 'phi-5'],
 };
 

@@ -51,10 +51,12 @@ export function useDistiller(
       let loopLimit = 0;
       const MAX_ITERATIONS = batchesRef.current.length * 5; // Allow for retries
 
+      let runningSummary = summaryRef.current;
+      let runningBatches = [...batchesRef.current];
+
       while (loopLimit < MAX_ITERATIONS) {
         loopLimit++;
-        const currentBatches = batchesRef.current;
-        const nextIdx = currentBatches.findIndex(b => b.status === 'pending' || b.status === 'error' || (b.status === 'retrying' && (b.retryDelay ?? 0) <= 0));
+        const nextIdx = runningBatches.findIndex(b => b.status === 'pending' || b.status === 'error' || (b.status === 'retrying' && (b.retryDelay ?? 0) <= 0));
         
         if (nextIdx === -1) break;
 
@@ -66,34 +68,35 @@ export function useDistiller(
           await new Promise(resolve => setTimeout(resolve, waitTime));
         }
 
-        setBatches(prev => prev.map((b, idx) => 
-          idx === nextIdx ? { ...b, status: 'processing', retryAttempt: (b.retryAttempt ?? 0), retryDelay: 0 } : b
-        ));
+        runningBatches[nextIdx] = { ...runningBatches[nextIdx], status: 'processing', retryAttempt: (runningBatches[nextIdx].retryAttempt ?? 0), retryDelay: 0 };
+        setBatches([...runningBatches]);
 
         const result = await processBatch(
           providerConfig,
-          summaryRef.current,
-          nextIdx > 0 ? currentBatches[nextIdx - 1].content : "",
-          currentBatches[nextIdx].content,
+          runningSummary,
+          nextIdx > 0 ? runningBatches[nextIdx - 1].content : "",
+          runningBatches[nextIdx].content,
           nextIdx,
-          currentBatches.length,
+          runningBatches.length,
           promptTemplate,
           (attempt, delay) => {
             setApiStatus('quota_limit');
             backoffRef.current = Math.max(backoffRef.current, attempt);
-            setBatches(prev => prev.map((b, idx) => 
-              idx === nextIdx ? { ...b, status: 'retrying', retryAttempt: attempt, retryDelay: Math.round(delay / 1000) } : b
-            ));
+            runningBatches[nextIdx] = { ...runningBatches[nextIdx], status: 'retrying', retryAttempt: attempt, retryDelay: Math.round(delay / 1000) };
+            setBatches([...runningBatches]);
           }
         );
 
         // Success Path
         setApiStatus('healthy');
         backoffRef.current = Math.max(0, backoffRef.current - 1);
+        
+        // Critical Fix: Sync summary manually across loop iterations
+        runningSummary = result.text;
         setCurrentSummary(result.text);
-        setBatches(prev => prev.map((b, idx) => 
-          idx === nextIdx ? { ...b, status: 'completed', result: result.text } : b
-        ));
+
+        runningBatches[nextIdx] = { ...runningBatches[nextIdx], status: 'completed', result: result.text };
+        setBatches([...runningBatches]);
       }
     } catch (err: any) {
       setApiStatus('error');

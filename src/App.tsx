@@ -8,6 +8,7 @@ import { MODES } from './config/constants';
 import { Header } from './components/Header';
 import { ControlPanel } from './components/ControlPanel';
 import { ResultsPanel } from './components/ResultsPanel';
+import { SkeletonLoader } from './components/SkeletonLoader';
 
 export default function App() {
   const {
@@ -28,6 +29,7 @@ export default function App() {
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isSequenceOpen, setIsSequenceOpen] = useState(false);
+  const [isIndexing, setIsIndexing] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -91,15 +93,23 @@ export default function App() {
   }, [addFiles, currentMode, setError]);
 
   // Reactive Batching Protocol (Hospital-Grade)
-  // Ensures batches are always in sync with file state and configuration
+  // Ensures batches are always in sync with file state and configuration.
+  // Also fires a brief "Indexing" transition so the segment grid doesn't
+  // appear to 'pop' after a file is ingested.
   useEffect(() => {
     if (!isLoaded || isProcessing) return;
-    
+
     const content = getCombinedContent();
     if (content) {
+      // Signal start of indexing phase
+      setIsIndexing(true);
       const newBatches = createBatches(content, batchSize, tokenCeiling, currentMode, customTurnPattern);
       setBatches(newBatches);
+      // Allow the transition animation to play for 600ms then resolve
+      const timer = setTimeout(() => setIsIndexing(false), 600);
+      return () => clearTimeout(timer);
     } else {
+      setIsIndexing(false);
       setBatches([]);
     }
   }, [files, batchSize, tokenCeiling, currentMode, customTurnPattern, isLoaded, isProcessing, setBatches, getCombinedContent]);
@@ -110,19 +120,7 @@ export default function App() {
   };
 
   if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden flex items-center justify-center">
-        <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-20">
-          <svg className="absolute w-[200%] h-[200%] -top-[50%] -left-[50%] text-amber-500/10" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path className="animate-path stroke-current fill-none stroke-[0.5]" d="M 0 500 Q 250 100 500 500 T 1000 500" />
-            <path className="animate-path stroke-current fill-none stroke-[0.3]" d="M 0 600 Q 300 200 600 600 T 1000 600" style={{ animationDelay: '-15s' }} />
-          </svg>
-        </div>
-        <div className="relative z-10 flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
-        </div>
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   const completedCount = batches.filter(b => b.status === 'completed').length;
@@ -188,6 +186,8 @@ export default function App() {
           <ResultsPanel 
             progress={progress}
             batchCount={batches.length}
+            batches={batches}
+            isIndexing={isIndexing}
             currentSummary={currentSummary}
             onClearSummary={() => setCurrentSummary('')}
           />

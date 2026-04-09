@@ -6,7 +6,7 @@ import { encrypt, decrypt } from '../lib/encryption';
 const DEFAULT_PROVIDER: ProviderConfig = {
   type: 'gemini',
   apiKey: '',
-  model: 'gemini-3.0-flash',
+  model: 'gemini-3-flash-preview',
 };
 
 const PERSISTENCE_LIMIT_BYTES = 4 * 1024 * 1024; // 4MB safety limit for localStorage
@@ -37,9 +37,9 @@ function sanitizeState(state: SessionState): Omit<SessionState, 'providerConfig'
 
   return {
     providerMetadata: {
-      type: state.providerConfig.type || 'gemini',
-      model: state.providerConfig.model || 'gemini-3.0-flash',
-      baseUrl: state.providerConfig.baseUrl
+      type: state.providerConfig?.type || 'gemini',
+      model: state.providerConfig?.model || 'gemini-3-flash-preview',
+      baseUrl: state.providerConfig?.baseUrl
     },
     // If too large, we clear all file contents to avoid "Partial Reload Hallucination"
     files: tooLarge ? state.files.map(f => ({ ...f, content: '' })) : state.files,
@@ -74,10 +74,9 @@ export function useSession() {
     customTurnPattern: '',
     batches: [],
     currentSummary: '',
-    persistenceStatus: 'active'
+    persistenceStatus: 'active',
+    isLoaded: false
   });
-
-  const [isLoaded, setIsLoaded] = useState(false);
 
   // Load session on mount
   useEffect(() => {
@@ -97,7 +96,7 @@ export function useSession() {
           // Migrate legacy or load new metadata
           const providerMetadata = session.providerMetadata || {
             type: 'gemini',
-            model: 'gemini-3.0-flash'
+            model: 'gemini-3-flash-preview'
           };
 
           // Surgical pick & validate
@@ -172,7 +171,7 @@ export function useSession() {
   // Debounce is short (300ms) because these fields change infrequently (user interaction only).
   // Crucially, batch updates and summary changes do NOT reset this timer.
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!state.isLoaded) return;
     const timeout = setTimeout(() => {
       try {
         const persistentData = sanitizeState(state);
@@ -184,7 +183,7 @@ export function useSession() {
     return () => clearTimeout(timeout);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    isLoaded,
+    state.isLoaded,
     state.currentMode,
     state.promptTemplate,
     state.customTurnPattern,
@@ -199,7 +198,7 @@ export function useSession() {
   // Debounce is longer (800ms) because batches/summary can update on every LLM response.
   // Continuously resetting a short timer during active processing caused data to never persist.
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!state.isLoaded) return;
     const timeout = setTimeout(() => {
       try {
         const persistentData = sanitizeState(state);
@@ -211,7 +210,7 @@ export function useSession() {
     return () => clearTimeout(timeout);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    isLoaded,
+    state.isLoaded,
     state.batches,
     state.currentSummary,
     state.files.length, // Watch length and mode, but debounce content
@@ -220,8 +219,8 @@ export function useSession() {
 
   // Persist sensitive data (Secure & Debounced)
   useEffect(() => {
-    if (!isLoaded || !state.providerConfig.apiKey) {
-      if (isLoaded && !state.providerConfig.apiKey) {
+    if (!state.isLoaded || !state.providerConfig.apiKey) {
+      if (state.isLoaded && !state.providerConfig.apiKey) {
         localStorage.removeItem('goldenpath_provider_key_secure');
       }
       return;
@@ -238,11 +237,15 @@ export function useSession() {
     }, 500);
 
     return () => clearTimeout(timeout);
-  }, [state.providerConfig.apiKey, isLoaded]);
+  }, [state.providerConfig.apiKey, state.isLoaded]);
 
   const getCombinedContent = useCallback((sources: MultiFileSource[]) => {
     return sources.map(f => `--- FILE: ${f.name} ---\n${f.content}`).join('\n\n');
   }, []);
+
+  const getCombinedContentBound = useCallback(() => {
+    return getCombinedContent(state.files);
+  }, [state.files, getCombinedContent]);
 
   const updateState = useCallback((updates: Partial<SessionState>) => {
     setState(prev => ({ ...prev, ...updates }));
@@ -327,9 +330,21 @@ export function useSession() {
     setCurrentMode: (mode: string) => updateState({ currentMode: mode }),
     setPromptTemplate: (template: string) => updateState({ promptTemplate: template }),
     setCustomTurnPattern: (pattern: string) => updateState({ customTurnPattern: pattern }),
-    setBatches: (batches: Batch[]) => updateState({ batches }),
-    setCurrentSummary: (summary: string) => updateState({ currentSummary: summary }),
+    setBatches: (batches: Batch[] | ((prev: Batch[]) => Batch[])) => {
+      if (typeof batches === 'function') {
+        setState(prev => ({ ...prev, batches: batches(prev.batches) }));
+      } else {
+        updateState({ batches });
+      }
+    },
+    setCurrentSummary: (summary: string | ((prev: string) => string)) => {
+      if (typeof summary === 'function') {
+        setState(prev => ({ ...prev, currentSummary: summary(prev.currentSummary) }));
+      } else {
+        updateState({ currentSummary: summary });
+      }
+    },
     clearSession,
-    getCombinedContent: () => getCombinedContent(state.files)
+    getCombinedContent: getCombinedContentBound
   };
 }
